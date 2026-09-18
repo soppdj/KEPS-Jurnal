@@ -232,14 +232,6 @@ export default function App() {
               radarData={radarData}
               isDarkMode={isDarkMode}
             />
-
-            <HabitHeatmap
-              reflections={userData.reflections}
-              completedActions={userData.completedActions}
-              activeDay={activeDay}
-              onSelectDay={handleOpenJournal}
-              metrics={metrics}
-            />
           </div>
         )}
 
