@@ -1,0 +1,42 @@
+{
+  "name": "KEPS Journal v2.0 - Jurnal Kepemimpinan Kepala Sekolah",
+  "short_name": "KEPS Journal",
+  "description": "Jurnal Kepemimpinan Situasional 90 Hari Menjadi Kepala Sekolah Berdampak",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#1E3A8A",
+  "orientation": "any",
+  "categories": ["education", "productivity", "leadership"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Refleksi Hari Ini",
+      "short_name": "Refleksi",
+      "description": "Tulis jurnal refleksi kepemimpinan hari ini",
+      "url": "/?tab=journal",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Analisis Radar",
+      "short_name": "Radar",
+      "description": "Lihat distribusi gaya kepemimpinan 9 dimensi",
+      "url": "/?tab=analytics",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Laporan PDF",
+      "short_name": "Laporan",
+      "description": "Cetak portofolio kepemimpinan",
+      "url": "/?tab=reports",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

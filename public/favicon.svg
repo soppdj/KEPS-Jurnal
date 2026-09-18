@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="128" fill="#0F172A"/>
+  <rect x="24" y="24" width="464" height="464" rx="104" stroke="#1E3A8A" stroke-width="16"/>
+  <!-- Graduation / School Crown -->
+  <path d="M256 96L80 184L256 272L432 184L256 96Z" fill="#1E3A8A" stroke="#10B981" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M144 220V320C144 320 180 376 256 376C332 376 368 320 368 320V220" stroke="#10B981" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Compass Star / Leadership Beacon -->
+  <circle cx="256" cy="272" r="16" fill="#F59E0B"/>
+  <path d="M432 184V304" stroke="#F59E0B" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="432" cy="316" r="10" fill="#F59E0B"/>
+  <!-- Accent Book Pages -->
+  <path d="M192 416C216 400 240 400 256 408C272 400 296 400 320 416" stroke="#E2E8F0" stroke-width="12" stroke-linecap="round"/>
+</svg>
