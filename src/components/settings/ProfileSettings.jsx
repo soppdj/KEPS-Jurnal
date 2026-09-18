@@ -332,9 +332,13 @@ export function ProfileSettings({
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                   Status Langganan & Keanggotaan
                 </h3>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                  subscription?.isTrial 
+                    ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30' 
+                    : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                }`}>
                   <Sparkles className="w-3 h-3" />
-                  VIP Eksekutif
+                  {subscription?.isTrial ? 'Trial 7 Hari' : 'VIP Eksekutif'}
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -364,7 +368,7 @@ export function ProfileSettings({
               </span>
               <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                {subscription?.planName || 'Paket 90 Hari Kepemimpinan Berdampak'}
+                {subscription?.planName || (subscription?.isTrial ? 'Masa Uji Coba 7 Hari (Trial)' : 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak')}
               </h4>
             </div>
             <div className="text-left sm:text-right">

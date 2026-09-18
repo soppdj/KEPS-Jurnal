@@ -63,7 +63,8 @@ export const subscriptionService = {
     const isActive = daysRemaining > 0;
 
     // Calculate percentage
-    const startDate = subscription.startDate ? new Date(subscription.startDate) : new Date(expiry.getTime() - 90 * 86400000);
+    const defaultPeriod = subscription.isTrial ? 7 : 90;
+    const startDate = subscription.startDate ? new Date(subscription.startDate) : new Date(expiry.getTime() - defaultPeriod * 86400000);
     const totalDurationMs = Math.max(86400000, expiry.getTime() - startDate.getTime());
     const elapsedMs = Math.max(0, now.getTime() - startDate.getTime());
     const percentageRemaining = isActive 
@@ -76,12 +77,20 @@ export const subscriptionService = {
       year: 'numeric'
     });
 
+    let statusLabel = 'Langganan Aktif';
+    if (subscription.isTrial) {
+      statusLabel = isActive ? 'Uji Coba Aktif (Trial)' : 'Masa Trial Berakhir';
+    } else {
+      statusLabel = isActive ? 'Langganan Aktif' : 'Masa Berlaku Berakhir';
+    }
+
     return {
       isActive,
+      isTrial: !!subscription.isTrial,
       daysRemaining,
       formattedExpiry,
       percentageRemaining,
-      statusLabel: isActive ? 'Langganan Aktif' : 'Masa Berlaku Berakhir',
+      statusLabel,
       statusColor: isActive ? 'emerald' : 'rose'
     };
   },
@@ -133,6 +142,7 @@ export const subscriptionService = {
             const updatedSubscription = {
               ...currentSubscription,
               status: 'active',
+              isTrial: false,
               planName: resData.plan_name || currentSubscription?.planName,
               validUntil: resData.valid_until,
               lastTokenUsed: token,
@@ -213,6 +223,7 @@ export const subscriptionService = {
     const updatedSubscription = {
       ...currentSubscription,
       status: 'active',
+      isTrial: false,
       planName,
       validUntil: newValid.toISOString(),
       lastTokenUsed: token,

@@ -18,7 +18,7 @@ export const cloudSyncService = {
     try {
       const data = storage.loadData();
       const exportPayload = {
-        app: 'KEPS Journal v2.0',
+        app: 'KEPS Jurnal v.1.0',
         exportedAt: new Date().toISOString(),
         ...data
       };

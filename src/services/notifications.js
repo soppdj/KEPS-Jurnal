@@ -48,7 +48,7 @@ export const notificationService = {
       notificationService.requestPermission().then(res => {
         if (res.success) {
           notificationService.triggerLocalNotification(
-            '🔔 Uji Notifikasi KEPS Journal v2.0',
+            '🔔 Uji Notifikasi KEPS Jurnal v.1.0',
             'Pengingat harian aktif! Anda akan diingatkan jam 07:00 (Aksi Pagi) & 13:30 (Refleksi Siang).'
           );
         } else {
@@ -59,7 +59,7 @@ export const notificationService = {
     }
 
     return notificationService.triggerLocalNotification(
-      '🔔 Uji Notifikasi KEPS Journal v2.0',
+      '🔔 Uji Notifikasi KEPS Jurnal v.1.0',
       'Pengingat harian aktif! Anda akan diingatkan jam 07:00 (Aksi Pagi) & 13:30 (Refleksi Siang).'
     );
   },

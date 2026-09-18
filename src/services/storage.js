@@ -24,11 +24,19 @@ export const storage = {
         delete mergedProfile.supervisorNip;
         delete mergedProfile.regionName;
 
+        let subscription = parsed.subscription || INITIAL_USER_DATA.subscription;
+        if (!subscription.tokensHistory || subscription.tokensHistory.length === 0) {
+          if (!subscription.lastTokenUsed && (subscription.planName === 'Akses Eksklusif 90 Hari Kepala Sekolah' || !subscription.isTrial)) {
+            subscription = INITIAL_USER_DATA.subscription;
+          }
+        }
+
         return {
           ...INITIAL_USER_DATA,
           ...parsed,
           profile: mergedProfile,
           settings: { ...INITIAL_USER_DATA.settings, ...(parsed.settings || {}) },
+          subscription,
           completedActions: parsed.completedActions || {},
           reflections: parsed.reflections || {}
         };

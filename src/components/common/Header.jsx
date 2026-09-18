@@ -46,10 +46,10 @@ export function Header({
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white whitespace-nowrap">
-                  KEPS Journal
+                  KEPS Jurnal
                 </span>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                  v2.0
+                  v.1.0
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate max-w-[130px] sm:max-w-[180px] lg:max-w-[220px]">
