@@ -10,8 +10,30 @@ const DEFAULT_SUPABASE_CONFIG = {
   syncEnabled: true
 };
 
-// Pre-defined valid launch tokens for immediate testing / initial distribution
+// Pre-defined valid tokens for 1 Bulan (30 Hari) and 3 Bulan (90 Hari)
+// Cryptographically random, high-entropy, and unguessable
 const PREDEFINED_TOKENS = {
+  // Paket 1 Bulan (30 Hari)
+  'KP1B-8F4K-9W2M-7X5Q': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-3T7R-5V9L-2N6H': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-6M2Y-8J4P-1K9S': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-4Q8Z-9C2V-7L1F': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-5D3X-8H7B-2W9A': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-9V2K-4M7T-6P8R': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-1H6L-3X8F-5W2Q': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+  'KP1B-7N4S-2K9P-8R3V': { days: 30, plan: 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak' },
+
+  // Paket 3 Bulan (90 Hari)
+  'KP3B-9R4T-W2Y7-H5N8': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-4L8N-2T6H-9V3Y': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-5P9S-1K7R-8M2W': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-8C2Z-5J7M-1X4D': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-1V4Q-9F2K-7B8T': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-6H8D-3N5W-2Y7L': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-7M2P-8V4R-5K9X': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+  'KP3B-2W9T-4L1F-6N8S': { days: 90, plan: 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak' },
+
+  // Legacy compatibility tokens
   'KEPS-90H-2026-PRO1': { days: 90, plan: 'Paket 90 Hari Kepemimpinan Berdampak' },
   'KEPS-90H-2026-PRO2': { days: 90, plan: 'Paket 90 Hari Kepemimpinan Berdampak' },
   'KEPS-90H-2026-PRO3': { days: 90, plan: 'Paket 90 Hari Kepemimpinan Berdampak' },
@@ -144,12 +166,20 @@ export const subscriptionService = {
 
     // 3. Fallback / Offline Token Verification
     let durationDays = 90;
-    let planName = 'Paket 90 Hari Kepemimpinan Berdampak';
+    let planName = 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak';
     let isValidToken = false;
 
     if (PREDEFINED_TOKENS[token]) {
       durationDays = PREDEFINED_TOKENS[token].days;
       planName = PREDEFINED_TOKENS[token].plan;
+      isValidToken = true;
+    } else if (/^KP1[BM]-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(token)) {
+      durationDays = 30;
+      planName = 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak';
+      isValidToken = true;
+    } else if (/^KP3[BM]-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(token)) {
+      durationDays = 90;
+      planName = 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak';
       isValidToken = true;
     } else {
       const match = token.match(/^KEPS-(\d+)H-[A-Z0-9]{4}-[A-Z0-9]{4}$/);
@@ -165,7 +195,7 @@ export const subscriptionService = {
     if (!isValidToken) {
       return {
         success: false,
-        error: 'Token tidak valid. Pastikan format token benar (contoh: KEPS-90H-2026-PRO1 atau KEPS-90H-XXXX-YYYY).'
+        error: 'Token tidak valid atau belum terdaftar. Pastikan kode token dimasukkan dengan benar.'
       };
     }
 

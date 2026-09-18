@@ -18,7 +18,8 @@ import {
   Clock,
   Sparkles,
   Loader2,
-  Check
+  Check,
+  ExternalLink
 } from 'lucide-react';
 import { notificationService } from '../../services/notifications';
 import { subscriptionService } from '../../services/subscriptionService';
@@ -421,7 +422,7 @@ export function ProfileSettings({
                   type="text"
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value.toUpperCase())}
-                  placeholder="Contoh: KEPS-90H-2026-PRO1"
+                  placeholder="Silahkan masukkan token Anda di sini!"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-sm uppercase font-mono tracking-wider text-slate-900 dark:text-white placeholder:normal-case placeholder:font-sans placeholder:tracking-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
@@ -462,36 +463,26 @@ export function ProfileSettings({
             )}
           </form>
 
-          {/* Security & Anti-Duplication Assurance Note */}
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex items-start gap-2.5 text-[11px] text-slate-500 dark:text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-            <p>
-              <strong className="text-slate-700 dark:text-slate-200">Keamanan Tunggal (Single-Use Token):</strong> Setiap token diverifikasi secara atomik dan hanya dapat digunakan 1 (satu) kali. Basis data token terenkripsi dan hanya dapat dikelola oleh Administrator sistem.
-            </p>
-          </div>
-
-          {/* Recently Used Tokens (if any) */}
-          {subscription?.tokensHistory && subscription.tokensHistory.length > 0 && (
-            <div className="pt-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                Riwayat Token Terverifikasi pada Perangkat Ini:
+          {/* Link Perpanjangan / Pembelian Token Resmi */}
+          <div className="mt-3 p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <div className="space-y-0.5 text-center sm:text-left">
+              <span className="font-bold text-slate-900 dark:text-white block">
+                Belum memiliki token atau ingin memperpanjang masa aktif?
               </span>
-              <div className="flex flex-wrap gap-1.5">
-                {subscription.tokensHistory.slice(-3).map((item, idx) => {
-                  const tokenCode = typeof item === 'string' ? item : item.token;
-                  const days = typeof item === 'object' && item.daysAdded ? `(+${item.daysAdded} hr)` : '';
-                  return (
-                    <span 
-                      key={idx} 
-                      className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-mono font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
-                    >
-                      ✓ {tokenCode} {days}
-                    </span>
-                  );
-                })}
-              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Dapatkan kode token resmi (Paket 1 Bulan & 3 Bulan) melalui tautan berikut.
+              </p>
             </div>
-          )}
+            <a
+              href="https://fatherlab.myscalev.com/p/keps-jurnal-3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all hover:scale-105 shrink-0"
+            >
+              <span>Dapatkan Token Langganan</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-﻿-- =========================================================================
+-- =========================================================================
 -- KEPS JOURNAL v2.0 - SUPABASE DATABASE INFRASTRUCTURE
 -- Project URL: https://izfrqlxolcinaunveuaz.supabase.co
 -- Cara Pakai: Buka Supabase Dashboard -> SQL Editor -> New Query -> Tempel (Paste) -> Run (Ctrl + Enter)
@@ -249,40 +249,71 @@ $$;
 -- Berikan izin eksekusi prosedur kepada role anon & authenticated
 GRANT EXECUTE ON FUNCTION public.redeem_subscription_token(TEXT, TEXT) TO anon, authenticated;
 
--- 5. Stored Procedure untuk Admin: Menghasilkan Batch Token Otomatis
+-- 5. Stored Procedure untuk Admin: Menghasilkan Batch Token Otomatis (Unik & Tidak Mudah Ditebak)
 CREATE OR REPLACE FUNCTION public.generate_subscription_tokens(
     p_count INT DEFAULT 5,
-    p_duration_days INT DEFAULT 90,
-    p_plan_name TEXT DEFAULT 'Paket 90 Hari Kepemimpinan Berdampak'
+    p_duration_days INT DEFAULT 30, -- 30 hari (1 bulan) atau 90 hari (3 bulan)
+    p_plan_name TEXT DEFAULT NULL
 )
 RETURNS TABLE(generated_token TEXT, duration_days INT, plan_name TEXT)
 LANGUAGE plpgsql
 AS $$
 DECLARE
     i INT;
+    v_prefix TEXT;
+    v_plan TEXT;
     v_code TEXT;
+    v_rand1 TEXT;
+    v_rand2 TEXT;
+    v_rand3 TEXT;
 BEGIN
+    IF p_duration_days <= 30 THEN
+        v_prefix := 'KP1B-';
+        v_plan := COALESCE(p_plan_name, 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak');
+    ELSIF p_duration_days <= 90 THEN
+        v_prefix := 'KP3B-';
+        v_plan := COALESCE(p_plan_name, 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak');
+    ELSE
+        v_prefix := 'KP1Y-';
+        v_plan := COALESCE(p_plan_name, 'Paket 1 Tahun Keanggotaan Eksekutif');
+    END IF;
+
     FOR i IN 1..p_count LOOP
-        v_code := 'KEPS-' || p_duration_days || 'H-' || 
-                  UPPER(SUBSTRING(MD5(RANDOM()::TEXT || CLOCK_TIMESTAMP()::TEXT) FROM 1 FOR 4)) || '-' || 
-                  UPPER(SUBSTRING(MD5(RANDOM()::TEXT || CLOCK_TIMESTAMP()::TEXT) FROM 5 FOR 4));
+        -- Menghasilkan 12 karakter acak heksadesimal dengan entropi tinggi (3 segmen x 4 karakter)
+        v_rand1 := UPPER(SUBSTRING(MD5(GEN_RANDOM_UUID()::TEXT || CLOCK_TIMESTAMP()::TEXT || RANDOM()::TEXT) FROM 1 FOR 4));
+        v_rand2 := UPPER(SUBSTRING(MD5(GEN_RANDOM_UUID()::TEXT || CLOCK_TIMESTAMP()::TEXT || RANDOM()::TEXT) FROM 5 FOR 4));
+        v_rand3 := UPPER(SUBSTRING(MD5(GEN_RANDOM_UUID()::TEXT || CLOCK_TIMESTAMP()::TEXT || RANDOM()::TEXT) FROM 9 FOR 4));
+        v_code := v_prefix || v_rand1 || '-' || v_rand2 || '-' || v_rand3;
         
         INSERT INTO public.keps_subscription_tokens (token_code, duration_days, plan_name)
-        VALUES (v_code, p_duration_days, p_plan_name);
+        VALUES (v_code, p_duration_days, v_plan);
 
         generated_token := v_code;
         duration_days := p_duration_days;
-        plan_name := p_plan_name;
+        plan_name := v_plan;
         RETURN NEXT;
     END LOOP;
 END;
 $$;
 
--- 6. Masukkan beberapa token awal siap pakai untuk testing / peluncuran awal
+-- 6. Masukkan token awal acak dengan keamanan tinggi (1 Bulan & 3 Bulan)
 INSERT INTO public.keps_subscription_tokens (token_code, duration_days, plan_name)
 VALUES 
+    -- Token Paket 1 Bulan (30 Hari)
+    ('KP1B-8F4K-9W2M-7X5Q', 30, 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak'),
+    ('KP1B-3T7R-5V9L-2N6H', 30, 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak'),
+    ('KP1B-6M2Y-8J4P-1K9S', 30, 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak'),
+    ('KP1B-4Q8Z-9C2V-7L1F', 30, 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak'),
+    ('KP1B-5D3X-8H7B-2W9A', 30, 'Paket 1 Bulan (30 Hari) Kepemimpinan Berdampak'),
+
+    -- Token Paket 3 Bulan (90 Hari)
+    ('KP3B-9R4T-W2Y7-H5N8', 90, 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak'),
+    ('KP3B-4L8N-2T6H-9V3Y', 90, 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak'),
+    ('KP3B-5P9S-1K7R-8M2W', 90, 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak'),
+    ('KP3B-8C2Z-5J7M-1X4D', 90, 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak'),
+    ('KP3B-1V4Q-9F2K-7B8T', 90, 'Paket 3 Bulan (90 Hari) Kepemimpinan Berdampak'),
+
+    -- Legacy Tokens
     ('KEPS-90H-2026-PRO1', 90, 'Paket 90 Hari Kepemimpinan Berdampak'),
-    ('KEPS-90H-2026-PRO2', 90, 'Paket 90 Hari Kepemimpinan Berdampak'),
-    ('KEPS-90H-2026-PRO3', 90, 'Paket 90 Hari Kepemimpinan Berdampak'),
     ('KEPS-365H-2026-VIP', 365, 'Paket 1 Tahun Keanggotaan Eksekutif')
 ON CONFLICT (token_code) DO NOTHING;
