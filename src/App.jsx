@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { storage } from './services/storage';
 import { CASES_90 } from './data/cases90';
 import { notificationService } from './services/notifications';
+import { DEFAULT_SUBSCRIPTION } from './data/defaultState';
 
 // Common Components
 import { Header } from './components/common/Header';
@@ -133,6 +134,15 @@ export default function App() {
     setUserData(updated);
   };
 
+  const handleUpdateSubscription = (newSubscription) => {
+    const updated = {
+      ...userData,
+      subscription: newSubscription
+    };
+    storage.saveData(updated);
+    setUserData(updated);
+  };
+
   const handleResetData = () => {
     const reset = storage.resetData();
     setUserData(reset);
@@ -255,8 +265,10 @@ export default function App() {
             <ProfileSettings
               profile={userData.profile}
               settings={userData.settings}
+              subscription={userData.subscription || DEFAULT_SUBSCRIPTION}
               onSaveProfile={handleSaveProfile}
               onSaveSettings={handleSaveSettings}
+              onUpdateSubscription={handleUpdateSubscription}
               onResetData={handleResetData}
             />
           </div>

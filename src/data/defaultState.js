@@ -28,11 +28,21 @@ export const DEFAULT_SETTINGS = {
   }
 };
 
+export const DEFAULT_SUBSCRIPTION = {
+  status: 'active', // 'active' | 'expired'
+  planName: 'Akses Eksklusif 90 Hari Kepala Sekolah',
+  startDate: new Date().toISOString(),
+  validUntil: new Date(Date.now() + 90 * 86400000).toISOString(),
+  lastTokenUsed: null,
+  tokensHistory: []
+};
+
 // Seed sample progress for Day 1 and Day 2 so new principals immediately see what a completed entry looks like!
 export const INITIAL_USER_DATA = {
   version: '2.0.0',
   profile: DEFAULT_PROFILE,
   settings: DEFAULT_SETTINGS,
+  subscription: DEFAULT_SUBSCRIPTION,
   activeDay: 3,
   // Key: day number (1-90)
   completedActions: {
