@@ -40,6 +40,35 @@ const PREDEFINED_TOKENS = {
   'KEPS-365H-2026-VIP': { days: 365, plan: 'Paket 1 Tahun Keanggotaan Eksekutif' },
 };
 
+// Permanent device-level storage key to ensure single-use token per device
+const DEVICE_CLAIMED_TOKENS_KEY = 'keps_device_claimed_tokens_registry';
+
+export const getDeviceClaimedTokens = () => {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return [];
+    const raw = window.localStorage.getItem(DEVICE_CLAIMED_TOKENS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+export const recordDeviceClaimedToken = (token) => {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    const current = getDeviceClaimedTokens();
+    const cleanToken = (token || '').trim().toUpperCase();
+    if (cleanToken && !current.includes(cleanToken)) {
+      current.push(cleanToken);
+      window.localStorage.setItem(DEVICE_CLAIMED_TOKENS_KEY, JSON.stringify(current));
+    }
+  } catch (e) {
+    console.warn('[KEPS Subscription] Failed to update device token registry:', e);
+  }
+};
+
 export const subscriptionService = {
   /**
    * Get formatted details and status of current subscription
@@ -62,8 +91,8 @@ export const subscriptionService = {
     const daysRemaining = Math.max(0, Math.ceil(msRemaining / (1000 * 60 * 60 * 24)));
     const isActive = daysRemaining > 0;
 
-    // Calculate percentage
-    const defaultPeriod = subscription.isTrial ? 7 : 90;
+    // Calculate percentage (3 days for trial)
+    const defaultPeriod = subscription.isTrial ? 3 : 90;
     const startDate = subscription.startDate ? new Date(subscription.startDate) : new Date(expiry.getTime() - defaultPeriod * 86400000);
     const totalDurationMs = Math.max(86400000, expiry.getTime() - startDate.getTime());
     const elapsedMs = Math.max(0, now.getTime() - startDate.getTime());
@@ -108,10 +137,15 @@ export const subscriptionService = {
       };
     }
 
-    // 1. Client-Side Double-Use Check: Prevent the same token from being used twice locally
+    // 1. Client-Side Double-Use Check: Check BOTH current subscription history and device hardware registry
     const history = currentSubscription?.tokensHistory || [];
-    const alreadyUsed = history.some(item => (typeof item === 'string' ? item : item.token) === token);
-    if (alreadyUsed) {
+    const deviceClaimed = getDeviceClaimedTokens();
+
+    const usedInHistory = history.some(item => (typeof item === 'string' ? item : item.token) === token);
+    const usedOnDevice = deviceClaimed.includes(token);
+
+    if (usedInHistory || usedOnDevice) {
+      recordDeviceClaimedToken(token);
       return {
         success: false,
         error: 'Token ini sudah pernah digunakan pada perangkat ini. Setiap token hanya dapat digunakan 1 kali.'
@@ -156,6 +190,8 @@ export const subscriptionService = {
                 }
               ]
             };
+
+            recordDeviceClaimedToken(token);
 
             return {
               success: true,
@@ -237,6 +273,8 @@ export const subscriptionService = {
         }
       ]
     };
+
+    recordDeviceClaimedToken(token);
 
     return {
       success: true,

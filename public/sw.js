@@ -3,6 +3,8 @@ const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
+  '/logo.png',
+  '/logo-192.png',
   '/favicon.svg',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'
 ];

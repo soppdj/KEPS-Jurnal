@@ -1,5 +1,5 @@
 {
-  "name": "KEPS Jurnal v.1.0 - Jurnal Kepemimpinan Kepala Sekolah",
+  "name": "KEPS Jurnal v.1.0",
   "short_name": "KEPS Jurnal v.1.0",
   "description": "Jurnal Kepemimpinan Situasional 90 Hari Menjadi Kepala Sekolah Berdampak",
   "start_url": "/",
@@ -10,9 +10,15 @@
   "categories": ["education", "productivity", "leadership"],
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -22,21 +28,21 @@
       "short_name": "Refleksi",
       "description": "Tulis jurnal refleksi kepemimpinan hari ini",
       "url": "/?tab=journal",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Analisis Radar",
       "short_name": "Radar",
       "description": "Lihat distribusi gaya kepemimpinan 9 dimensi",
       "url": "/?tab=analytics",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Laporan PDF",
       "short_name": "Laporan",
       "description": "Cetak portofolio kepemimpinan",
       "url": "/?tab=reports",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
     }
   ]
 }

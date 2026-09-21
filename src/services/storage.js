@@ -18,15 +18,31 @@ export const storage = {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Merge with initial structure to guarantee schema compatibility
         const mergedProfile = { ...INITIAL_USER_DATA.profile, ...(parsed.profile || {}) };
         delete mergedProfile.supervisorName;
         delete mergedProfile.supervisorNip;
         delete mergedProfile.regionName;
 
+        // Auto-upgrade legacy default profile to the new requested default
+        if (
+          !mergedProfile.principalName || 
+          mergedProfile.principalName === 'Siti Asiyah, S.Pd' ||
+          mergedProfile.schoolName === 'TK Khoirur Rooziqiin Montessori Bandung' ||
+          mergedProfile.schoolName === 'SMP Negeri 1 Merdeka Nusantara'
+        ) {
+          mergedProfile.principalName = INITIAL_USER_DATA.profile.principalName;
+          mergedProfile.nip = INITIAL_USER_DATA.profile.nip;
+          mergedProfile.schoolName = INITIAL_USER_DATA.profile.schoolName;
+          mergedProfile.schoolAddress = INITIAL_USER_DATA.profile.schoolAddress;
+          mergedProfile.schoolLevel = INITIAL_USER_DATA.profile.schoolLevel;
+          mergedProfile.photoUrl = INITIAL_USER_DATA.profile.photoUrl;
+        } else if (!mergedProfile.photoUrl && INITIAL_USER_DATA.profile.photoUrl) {
+          mergedProfile.photoUrl = INITIAL_USER_DATA.profile.photoUrl;
+        }
+
         let subscription = parsed.subscription || INITIAL_USER_DATA.subscription;
         if (!subscription.tokensHistory || subscription.tokensHistory.length === 0) {
-          if (!subscription.lastTokenUsed && (subscription.planName === 'Akses Eksklusif 90 Hari Kepala Sekolah' || !subscription.isTrial)) {
+          if (!subscription.lastTokenUsed && (subscription.planName === 'Akses Eksklusif 90 Hari Kepala Sekolah' || subscription.planName === 'Masa Uji Coba 7 Hari (Trial)' || !subscription.isTrial)) {
             subscription = INITIAL_USER_DATA.subscription;
           }
         }

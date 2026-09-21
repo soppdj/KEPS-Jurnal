@@ -213,7 +213,7 @@ export function ReportExporter({
             {/* Official Header */}
             <div className="border-b-4 border-double border-slate-900 pb-4 mb-6 text-center">
               <h1 className="text-xl font-extrabold uppercase text-slate-950 tracking-tight">
-                {profile?.schoolName || 'TK Khoirur Rooziqiin Montessori Bandung'}
+                {profile?.schoolName || 'SD Inspira Montessori'}
               </h1>
               {profile?.schoolAddress && (
                 <p className="text-xs text-slate-600 mt-1 font-medium">
@@ -377,7 +377,7 @@ export function ReportExporter({
             {/* Kop Laporan */}
             <div className="border-b-4 border-double border-slate-900 pb-4 mb-6 text-center">
               <h1 className="text-xl font-black uppercase text-slate-950 tracking-tight">
-                {profile?.schoolName || 'TK Khoirur Rooziqiin Montessori Bandung'}
+                {profile?.schoolName || 'SD Inspira Montessori'}
               </h1>
               {profile?.schoolAddress && (
                 <p className="text-xs text-slate-600 mt-1 font-medium">

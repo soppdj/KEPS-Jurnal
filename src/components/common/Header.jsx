@@ -40,8 +40,8 @@ export function Header({
             className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0 pr-3 sm:pr-4 lg:pr-6 border-r border-slate-200 dark:border-slate-800" 
             onClick={() => setActiveTab('dashboard')}
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-navy-800 via-blue-800 to-emerald-500 flex items-center justify-center shadow-md shadow-navy-950/20 text-white transition-all group-hover:scale-105 group-hover:shadow-emerald-500/20 shrink-0">
-              <BookMarked className="w-5 h-5 text-white" strokeWidth={2.2} />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-md shadow-navy-950/20 transition-all group-hover:scale-105 shrink-0 bg-navy-900 border border-emerald-500/20">
+              <img src="/logo.png" alt="KEPS Jurnal Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
@@ -53,7 +53,7 @@ export function Header({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate max-w-[130px] sm:max-w-[180px] lg:max-w-[220px]">
-                {profile?.schoolName || 'SMP Negeri 1 Merdeka Nusantara'}
+                {profile?.schoolName || 'SD Inspira Montessori'}
               </p>
             </div>
           </div>
