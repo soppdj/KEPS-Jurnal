@@ -63,3 +63,146 @@
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 1rem);
 }
+
+/* ===================================================
+   3D MODERN VISUAL SYSTEM (Depth, Taktil & Lighting)
+   =================================================== */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* 3D Elevated Cards */
+.card-3d {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 10px 30px -8px rgba(0, 0, 0, 0.45),
+    0 4px 12px -2px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.light .card-3d, html:not(.dark) .card-3d {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.9) 100%);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 
+    0 10px 25px -5px rgba(15, 23, 42, 0.08),
+    0 4px 10px -2px rgba(15, 23, 42, 0.04),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.card-3d:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 20px 40px -12px rgba(0, 0, 0, 0.55),
+    0 0 25px -4px rgba(16, 185, 129, 0.15),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 3D Tactile Buttons */
+.btn-3d-emerald {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-bottom: 4px solid #047857;
+  box-shadow: 0 8px 16px -2px rgba(16, 185, 129, 0.35);
+  transition: all 0.12s ease;
+}
+
+.btn-3d-emerald:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -2px rgba(16, 185, 129, 0.45);
+}
+
+.btn-3d-emerald:active {
+  transform: translateY(3px);
+  border-bottom-width: 1px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-3d-blue {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border-bottom: 4px solid #1d4ed8;
+  box-shadow: 0 8px 16px -2px rgba(59, 130, 246, 0.35);
+  transition: all 0.12s ease;
+}
+
+.btn-3d-blue:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -2px rgba(59, 130, 246, 0.45);
+}
+
+.btn-3d-blue:active {
+  transform: translateY(3px);
+  border-bottom-width: 1px;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+}
+
+.btn-3d-slate {
+  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+  color: white;
+  border-bottom: 3px solid #0f172a;
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.3);
+  transition: all 0.12s ease;
+}
+
+.btn-3d-slate:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-3d-slate:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+/* Glowing Rim & Borders */
+.glow-emerald-border {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 20px -2px rgba(16, 185, 129, 0.25), inset 0 0 15px -3px rgba(16, 185, 129, 0.1);
+}
+
+.glow-blue-border {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 20px -2px rgba(59, 130, 246, 0.25), inset 0 0 15px -3px rgba(59, 130, 246, 0.1);
+}
+
+/* Smooth 3D Floating Animations */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0.4deg);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-0.4deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 8s ease-in-out infinite;
+}
+

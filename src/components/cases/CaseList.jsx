@@ -18,9 +18,16 @@ export function CaseList({
   reflections = {}, 
   onSelectDay, 
   onOpenJournal, 
-  onOpenCaseDetail 
+  onOpenCaseDetail,
+  initialSearchQuery = ''
 }) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+
+  React.useEffect(() => {
+    if (initialSearchQuery !== undefined) {
+      setSearchQuery(initialSearchQuery);
+    }
+  }, [initialSearchQuery]);
   const [selectedPhase, setSelectedPhase] = useState('all'); // 'all' | '1' | '2' | '3'
   const [selectedStyle, setSelectedStyle] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'completed' | 'pending'

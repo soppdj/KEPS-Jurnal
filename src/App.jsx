@@ -7,11 +7,13 @@ import { DEFAULT_SUBSCRIPTION } from './data/defaultState';
 // Common Components
 import { Header } from './components/common/Header';
 import { BottomNav } from './components/common/BottomNav';
+import { OpeningScreen } from './components/common/OpeningScreen';
+import { TrialLockModal } from './components/common/TrialLockModal';
 
 // Dashboard Components
+import { DashboardTopCards } from './components/dashboard/DashboardTopCards';
 import { TodayHeroCard } from './components/dashboard/TodayHeroCard';
-import { ProgressOverview } from './components/dashboard/ProgressOverview';
-import { QuickStats } from './components/dashboard/QuickStats';
+import { ProgressTrackingCalendar } from './components/dashboard/ProgressTrackingCalendar';
 
 // Case Explorer Components
 import { CaseList } from './components/cases/CaseList';
@@ -35,6 +37,15 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'cases' | 'journal' | 'analytics' | 'reports' | 'settings'
   const [activeDay, setActiveDay] = useState(() => userData.activeDay || 3);
   const [selectedCaseModal, setSelectedCaseModal] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showOpening, setShowOpening] = useState(() => {
+    try {
+      return localStorage.getItem('keps_skip_opening') !== 'true';
+    } catch {
+      return true;
+    }
+  });
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return userData.profile?.theme === 'light' ? false : true;
   });
@@ -79,6 +90,19 @@ export default function App() {
   const currentReflection = useMemo(() => {
     return userData.reflections[activeDay] || null;
   }, [userData.reflections, activeDay]);
+
+  // Check if trial has expired (Automatic Lockout)
+  const isTrialExpired = useMemo(() => {
+    const sub = userData.subscription;
+    if (!sub) return false;
+    if (sub.isTrial) {
+      return new Date() > new Date(sub.validUntil);
+    }
+    if (sub.status === 'expired' || (sub.validUntil && new Date() > new Date(sub.validUntil))) {
+      return true;
+    }
+    return false;
+  }, [userData.subscription]);
 
   // Handlers
   const handleToggleDarkMode = () => {
@@ -157,6 +181,19 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white transition-colors">
+      {/* 1. Opening 3D Showcase (Before Entering Dashboard) */}
+      {showOpening && (
+        <OpeningScreen onEnterApp={() => setShowOpening(false)} />
+      )}
+
+      {/* 2. Strict Paywall Lock (When Trial Expired) */}
+      {isTrialExpired && (
+        <TrialLockModal
+          subscription={userData.subscription || DEFAULT_SUBSCRIPTION}
+          onSubscriptionUpdated={handleUpdateSubscription}
+        />
+      )}
+
       {/* Top Desktop & Mobile Header */}
       <Header
         activeTab={activeTab}
@@ -165,45 +202,77 @@ export default function App() {
         metrics={metrics}
         isDarkMode={isDarkMode}
         toggleDarkMode={handleToggleDarkMode}
+        onOpenOpeningScreen={() => setShowOpening(true)}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 mb-20 md:mb-8">
+        
         {/* TAB 1: DASHBOARD */}
         {activeTab === 'dashboard' && (
-          <div className="space-y-8 animate-in fade-in duration-200">
-            {/* Today's Hero Situational Case */}
-            <TodayHeroCard
+          <div className="space-y-4 sm:space-y-5 animate-in fade-in duration-200">
+            {/* Dashboard Header Title & Phase Selector */}
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                  Dashboard
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                  Ikhtisar Kepemimpinan Situasional Hari Ke-{activeDay} • {currentCase.phaseName}
+                </p>
+              </div>
+
+              {/* Day / Phase Quick Switcher */}
+              <div className="flex items-center gap-2">
+                <select
+                  value={activeDay}
+                  onChange={(e) => handleSelectDay(Number(e.target.value))}
+                  className="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm cursor-pointer"
+                >
+                  {CASES_90.map((c) => (
+                    <option key={c.day} value={c.day}>
+                      Hari {c.day}: {c.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* TOP ROW: 3 METRIC 3D CARDS (Mint/Emerald, Slate/Navy, Electric Blue) */}
+            <DashboardTopCards
+              activeDay={activeDay}
               currentCase={currentCase}
-              completedActions={currentActions}
               reflection={currentReflection}
-              onSelectDay={handleSelectDay}
+              metrics={metrics}
               onOpenJournal={handleOpenJournal}
-              onOpenCaseDetail={(c) => setSelectedCaseModal(c)}
+              onOpenAnalytics={() => setActiveTab('analytics')}
             />
 
-            {/* Quick Stats Grid */}
-            <QuickStats
-              metrics={metrics}
-              activeDay={activeDay}
-            />
+            {/* MIDDLE ROW: SPLIT HERO CASE + PROGRESS TRACKING CALENDAR (3 SESI) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
+              <div className="lg:col-span-7">
+                <TodayHeroCard
+                  currentCase={currentCase}
+                  completedActions={currentActions}
+                  reflection={currentReflection}
+                  onSelectDay={handleSelectDay}
+                  onOpenJournal={handleOpenJournal}
+                  onOpenCaseDetail={(c) => setSelectedCaseModal(c)}
+                />
+              </div>
 
-            {/* Progress Overview & Phase Cards */}
-            <ProgressOverview
-              metrics={metrics}
-              onSelectPhase={(phaseNum) => {
-                setActiveTab('cases');
-              }}
-            />
-
-            {/* Habit Heatmap Grid */}
-            <HabitHeatmap
-              reflections={userData.reflections}
-              completedActions={userData.completedActions}
-              activeDay={activeDay}
-              onSelectDay={handleOpenJournal}
-              metrics={metrics}
-            />
+              <div className="lg:col-span-5">
+                <ProgressTrackingCalendar
+                  activeDay={activeDay}
+                  onSelectDay={handleSelectDay}
+                  completedActions={userData.completedActions}
+                  reflections={userData.reflections}
+                  metrics={metrics}
+                />
+              </div>
+            </div>
           </div>
         )}
 
@@ -216,6 +285,7 @@ export default function App() {
               onSelectDay={handleSelectDay}
               onOpenJournal={handleOpenJournal}
               onOpenCaseDetail={(c) => setSelectedCaseModal(c)}
+              initialSearchQuery={searchQuery}
             />
           </div>
         )}
@@ -237,10 +307,17 @@ export default function App() {
 
         {/* TAB 4: ANALISIS RADAR & VISUALISASI */}
         {activeTab === 'analytics' && (
-          <div className="space-y-8 animate-in fade-in duration-200">
+          <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
             <LeadershipRadar
               radarData={radarData}
               isDarkMode={isDarkMode}
+            />
+            <HabitHeatmap
+              reflections={userData.reflections}
+              completedActions={userData.completedActions}
+              activeDay={activeDay}
+              onSelectDay={handleOpenJournal}
+              metrics={metrics}
             />
           </div>
         )}
