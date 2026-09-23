@@ -23,28 +23,39 @@ export const storage = {
         delete mergedProfile.supervisorNip;
         delete mergedProfile.regionName;
 
-        // Auto-upgrade legacy default profile to the new requested default
+        // Auto-upgrade legacy default profile to the new requested default from Image 1
         if (
           !mergedProfile.principalName || 
           mergedProfile.principalName === 'Siti Asiyah, S.Pd' ||
+          mergedProfile.schoolName === 'SD Inspira Montessori' ||
           mergedProfile.schoolName === 'TK Khoirur Rooziqiin Montessori Bandung' ||
           mergedProfile.schoolName === 'SMP Negeri 1 Merdeka Nusantara'
         ) {
           mergedProfile.principalName = INITIAL_USER_DATA.profile.principalName;
           mergedProfile.nip = INITIAL_USER_DATA.profile.nip;
-          mergedProfile.schoolName = INITIAL_USER_DATA.profile.schoolName;
+          mergedProfile.schoolName = INITIAL_USER_DATA.profile.schoolName; // 'TK Inspira Montessori'
           mergedProfile.schoolAddress = INITIAL_USER_DATA.profile.schoolAddress;
           mergedProfile.schoolLevel = INITIAL_USER_DATA.profile.schoolLevel;
-          mergedProfile.photoUrl = INITIAL_USER_DATA.profile.photoUrl;
-        } else if (!mergedProfile.photoUrl && INITIAL_USER_DATA.profile.photoUrl) {
-          mergedProfile.photoUrl = INITIAL_USER_DATA.profile.photoUrl;
+          mergedProfile.photoUrl = '';
         }
 
+        // Enforce 3-day trial for any subscription without a verified claimed token
         let subscription = parsed.subscription || INITIAL_USER_DATA.subscription;
-        if (!subscription.tokensHistory || subscription.tokensHistory.length === 0) {
-          if (!subscription.lastTokenUsed && (subscription.planName === 'Akses Eksklusif 90 Hari Kepala Sekolah' || subscription.planName === 'Masa Uji Coba 7 Hari (Trial)' || !subscription.isTrial)) {
-            subscription = INITIAL_USER_DATA.subscription;
-          }
+        if (!subscription.lastTokenUsed || !subscription.tokensHistory || subscription.tokensHistory.length === 0) {
+          const trialStartTime = subscription.startDate ? new Date(subscription.startDate).getTime() : Date.now();
+          const trialStart = isNaN(trialStartTime) ? Date.now() : trialStartTime;
+          const validUntilTime = trialStart + 3 * 86400000;
+          const isExpired = Date.now() > validUntilTime;
+
+          subscription = {
+            status: isExpired ? 'expired' : 'active',
+            planName: 'Masa Uji Coba 3 Hari (Trial)',
+            isTrial: true,
+            startDate: new Date(trialStart).toISOString(),
+            validUntil: new Date(validUntilTime).toISOString(),
+            lastTokenUsed: null,
+            tokensHistory: []
+          };
         }
 
         return {

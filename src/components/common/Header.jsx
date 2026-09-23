@@ -58,7 +58,7 @@ export function Header({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate max-w-[120px] sm:max-w-[160px] lg:max-w-[190px]">
-                {profile?.schoolName || 'SD Inspira Montessori'}
+                {profile?.schoolName || 'TK Inspira Montessori'}
               </p>
             </div>
           </div>

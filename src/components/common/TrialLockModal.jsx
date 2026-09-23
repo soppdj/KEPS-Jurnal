@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Lock, 
   KeyRound, 
@@ -15,6 +15,15 @@ export function TrialLockModal({ subscription, onSubscriptionUpdated }) {
   const [tokenInput, setTokenInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState(null);
+
+  // Lock body scroll when trial lock modal is active
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   const handleRedeem = async (e) => {
     e.preventDefault();
@@ -57,7 +66,7 @@ export function TrialLockModal({ subscription, onSubscriptionUpdated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/95 backdrop-blur-2xl overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-navy-950/95 backdrop-blur-2xl overflow-y-auto">
       {/* Background Ambient Glow */}
       <div className="absolute w-[450px] h-[450px] bg-red-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute w-[350px] h-[350px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10" />

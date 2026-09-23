@@ -24,7 +24,6 @@ import { ReflectionForm } from './components/journal/ReflectionForm';
 
 // Analytics & Visualizations
 import { LeadershipRadar } from './components/analytics/LeadershipRadar';
-import { HabitHeatmap } from './components/analytics/HabitHeatmap';
 
 // Reports & PDF
 import { ReportExporter } from './components/reports/ReportExporter';
@@ -94,10 +93,14 @@ export default function App() {
   // Check if trial has expired (Automatic Lockout)
   const isTrialExpired = useMemo(() => {
     const sub = userData.subscription;
-    if (!sub) return false;
-    if (sub.isTrial) {
+    if (!sub) return true;
+    // If user has not claimed any verified token, they are strictly under 3-day trial
+    if (!sub.lastTokenUsed || !sub.tokensHistory || sub.tokensHistory.length === 0) {
+      if (sub.status === 'expired') return true;
+      if (!sub.validUntil) return true;
       return new Date() > new Date(sub.validUntil);
     }
+    // If user has redeemed a token, check standard token expiration
     if (sub.status === 'expired' || (sub.validUntil && new Date() > new Date(sub.validUntil))) {
       return true;
     }
@@ -311,13 +314,6 @@ export default function App() {
             <LeadershipRadar
               radarData={radarData}
               isDarkMode={isDarkMode}
-            />
-            <HabitHeatmap
-              reflections={userData.reflections}
-              completedActions={userData.completedActions}
-              activeDay={activeDay}
-              onSelectDay={handleOpenJournal}
-              metrics={metrics}
             />
           </div>
         )}
