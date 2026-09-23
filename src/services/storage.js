@@ -29,7 +29,8 @@ export const storage = {
           mergedProfile.principalName === 'Siti Asiyah, S.Pd' ||
           mergedProfile.schoolName === 'SD Inspira Montessori' ||
           mergedProfile.schoolName === 'TK Khoirur Rooziqiin Montessori Bandung' ||
-          mergedProfile.schoolName === 'SMP Negeri 1 Merdeka Nusantara'
+          mergedProfile.schoolName === 'SMP Negeri 1 Merdeka Nusantara' ||
+          (mergedProfile.photoUrl && mergedProfile.photoUrl.startsWith('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD'))
         ) {
           mergedProfile.principalName = INITIAL_USER_DATA.profile.principalName;
           mergedProfile.nip = INITIAL_USER_DATA.profile.nip;

@@ -478,7 +478,7 @@ export function ProfileSettings({
               </p>
             </div>
             <a
-              href="https://fatherlab.myscalev.com/p/keps-jurnal-3"
+              href="https://fatherlab.myscalev.com/keps-jurnal-checkout"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all hover:scale-105 shrink-0"

@@ -162,7 +162,7 @@ export function TrialLockModal({ subscription, onSubscriptionUpdated }) {
             Belum memiliki kode token atau ingin memperpanjang masa aktif?
           </p>
           <a
-            href="https://fatherlab.myscalev.com/p/keps-jurnal-3"
+            href="https://fatherlab.myscalev.com/keps-jurnal-checkout"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-bold transition-all group"
